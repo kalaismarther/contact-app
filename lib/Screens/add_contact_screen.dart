@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo/Database/database_service.dart';
 import 'package:todo/Models/person_model.dart';
 
 class AddContactScreen extends StatefulWidget {
@@ -76,18 +77,26 @@ class _AddContactScreenState extends State<AddContactScreen> {
 
             Center(
               child: ElevatedButton(
-                onPressed: _nameController.text.isEmpty ||
-                        _emailController.text.isEmpty ||
-                        _mobileController.text.isEmpty ||
-                        _dobController.text.isEmpty
-                    ? () {}
-                    : () {
-                        Navigator.of(context).pop(PersonModel(
-                            name: _nameController.text,
-                            mobileNo: _mobileController.text,
-                            email: _emailController.text,
-                            dob: _dobController.text));
-                      },
+                onPressed: () async {
+                  if (_nameController.text.isEmpty ||
+                      _emailController.text.isEmpty ||
+                      _mobileController.text.isEmpty ||
+                      _dobController.text.isEmpty) {
+                    return;
+                  } else {
+                    await DatabaseService().addContact(PersonModel(
+                        name: _nameController.text,
+                        mobileNo: _mobileController.text,
+                        email: _emailController.text,
+                        dob: _dobController.text));
+                    Navigator.pop(context);
+                    // Navigator.of(context).pop(PersonModel(
+                    //     name: _nameController.text,
+                    //     mobileNo: _mobileController.text,
+                    //     email: _emailController.text,
+                    //     dob: _dobController.text));
+                  }
+                },
                 child: const Text('Add'),
               ),
             )
